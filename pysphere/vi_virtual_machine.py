@@ -1822,7 +1822,17 @@ class VIVirtualMachine(VIManagedEntity):
                 p['hostname'] = self.properties.guest.hostName
             if hasattr(self.properties.guest, "ipAddress"):
                 p['ip_address'] = self.properties.guest.ipAddress
-            nics = []
+
+            guest_disks = []
+            if hasattr(self.properties.guest, "disk"):
+                for disk in self.properties.guest.disk:
+                    guest_disks.append({
+                        'capacity': disk.capacity,
+                        'diskPath': disk.diskPath,
+                        'freeSpace': disk.freeSpace,
+                    })
+                p['guest_disk'] = guest_disks
+            nics = []                    
             if hasattr(self.properties.guest, "net"):
                 for nic in self.properties.guest.net:
                     nics.append({
